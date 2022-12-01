@@ -33,3 +33,13 @@
   flex-direction: row;
   justify-content: flex-start;
 }
+
+.success-msg {
+  color: lightgreen;
+  font-weight: bold;
+}
+
+.error-msg {
+  color: lightcoral;
+  font-weight: bold;
+}

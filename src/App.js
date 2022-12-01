@@ -4,15 +4,19 @@ import './App.css';
 
 function App() {
   const [supervisors, setSupervisors] = useState([]);
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState(null);
-  const [supervisor, setSupervisor] = useState(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [supervisor, setSupervisor] = useState('none');
+
+  const [successMsg, setSuccessMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(false);
 
   const [enableEmail, setEnableEmail] = useState(false);
   const [enablePhone, setEnablePhone] = useState(false);
 
+  // populating supervisors from api on page load
   useEffect(() => {
     axios.get('/api/supervisors')
       .then((response) => {
@@ -20,17 +24,39 @@ function App() {
       });
   }, []);
 
+  // submitting form data to api
   function submitForm() {
+    // building api payload
     const formData = {
       firstName: firstName,
       lastName: lastName,
-      email: enableEmail ? email : null,
-      phoneNumber: enablePhone ? phoneNumber : null,
+      email: email,
+      phoneNumber: phoneNumber,
       supervisor: supervisor
     }
-    axios.put('/api/submit', {formData: formData}).catch(err => console.log(err.response.data.message));
+    // sending form data to api
+    axios.put('/api/submit', {formData: formData})
+      .then((response) => {
+        if (response.status === 200) {
+          setFirstName('');
+          setLastName('');
+          setEmail('');
+          setEnableEmail(false);
+          setPhoneNumber('');
+          setEnablePhone(false);
+          setSupervisor('none');
+          setSuccessMsg(true);
+          setErrorMsg({visible: false, message: ''});
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        setSuccessMsg(false);
+        setErrorMsg({visible: true, message: err.response.data.message});
+      });
   }
 
+  // rendering list of supervisors as select list options
   function renderOptions(options) {
     return options.map((item, index) =>
       <option value={item.info} name={item.info} key={item.id}>
@@ -39,25 +65,30 @@ function App() {
     );
   }
 
+  // toggling email and phone number field based on checckbox selection
   function toggleEmail() {
+    setEmail('');
     setEnableEmail(!enableEmail);
   }
 
   function togglePhone() {
+    setPhoneNumber('');
     setEnablePhone(!enablePhone);
   }
 
   return (
     <div className='form-container'>
       <h2>Notification Form</h2>
+      { successMsg && <p className='success-msg'>Your notification request has been successfully submitted!</p> }
+      { errorMsg.visible && <p className='error-msg'>{errorMsg.message}</p> }
       <div className='input-row'>
         <div className='input-group'>
           <label>First Name</label>
-          <input type='text' onChange={(e) => setFirstName(e.target.value)}></input>
+          <input value={firstName} type='text' onChange={(e) => setFirstName(e.target.value)}></input>
         </div>
         <div className='input-group'>
           <label>Last Name</label>
-          <input type='text' onChange={(e) => setLastName(e.target.value)}></input>
+          <input value={lastName} type='text' onChange={(e) => setLastName(e.target.value)}></input>
         </div>
       </div>
       <div className='input-row'>
@@ -66,23 +97,23 @@ function App() {
       <div className='input-row'>
         <div className='input-group'>
           <div className='check-row'>
-            <input type='checkbox' onClick={toggleEmail}></input>
+            <input checked={enableEmail} type='checkbox' onChange={toggleEmail}></input>
             <label>Email</label>
           </div>
-          <input disabled={!enableEmail} type='text' onChange={(e) => setEmail(e.target.value)}></input>
+          <input disabled={!enableEmail} value={email} type='text' onChange={(e) => setEmail(e.target.value)}></input>
         </div>
         <div className='input-group'>
           <div className='check-row'>
-            <input type='checkbox' onClick={togglePhone}></input>
+            <input checked={enablePhone} type='checkbox' onChange={togglePhone}></input>
             <label>Phone Number</label>
           </div>
-          <input disabled={!enablePhone} type='text' onChange={(e) => setPhoneNumber(e.target.value)}></input>
+          <input disabled={!enablePhone} value={phoneNumber} type='text' onChange={(e) => setPhoneNumber(e.target.value)}></input>
         </div>
       </div>
       <div className='input-row'>
         <div className='input-group'>
           <label>Supervisor</label>
-          <select onChange={(e) => setSupervisor(e.target.value)}>
+          <select value={supervisor} onChange={(e) => setSupervisor(e.target.value)}>
             <option value='none' name='none'>Select...</option>
             {renderOptions(supervisors)}
           </select>

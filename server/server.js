@@ -14,7 +14,7 @@ server.get("/api/supervisors", (req, res) => {
       // iterating supervisor list and building records if jurisdiction is not a number
       response.data.forEach((element) => {
         if (isNaN(parseInt(element.jurisdiction, 10))) {
-          const s = element.jurisdiction + ' - ' + element.lastName + ', ' + element.lastName;
+          const s = element.jurisdiction + ' - ' + element.lastName + ', ' + element.firstName;
           supervisors.push({
             info: s,
             id: element.id
