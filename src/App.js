@@ -87,6 +87,7 @@ function App() {
   }
 
   return (
+    <div className='main-content'>
     <div className='form-container'>
       <h2>Notification Form</h2>
       { successMsg && <p className='success-msg'>Your notification request has been successfully submitted!</p> }
@@ -132,6 +133,7 @@ function App() {
       <div className='input-row'>
         <button onClick={submitForm}>Submit</button>
       </div>
+    </div>
     </div>
   );
 }
