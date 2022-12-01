@@ -10,6 +10,9 @@ function App() {
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [supervisor, setSupervisor] = useState(null);
 
+  const [enableEmail, setEnableEmail] = useState(false);
+  const [enablePhone, setEnablePhone] = useState(false);
+
   useEffect(() => {
     axios.get('/api/supervisors')
       .then((response) => {
@@ -21,8 +24,8 @@ function App() {
     const formData = {
       firstName: firstName,
       lastName: lastName,
-      email: email,
-      phoneNumber: phoneNumber,
+      email: enableEmail ? email : null,
+      phoneNumber: enablePhone ? phoneNumber : null,
       supervisor: supervisor
     }
     axios.put('/api/submit', {formData: formData}).catch(err => console.log(err.response.data.message));
@@ -34,6 +37,14 @@ function App() {
         {item.info}
       </option>
     );
+  }
+
+  function toggleEmail() {
+    setEnableEmail(!enableEmail);
+  }
+
+  function togglePhone() {
+    setEnablePhone(!enablePhone);
   }
 
   return (
@@ -50,13 +61,22 @@ function App() {
         </div>
       </div>
       <div className='input-row'>
+        How would you like to be notified?
+      </div>
+      <div className='input-row'>
         <div className='input-group'>
-          <label>Email</label>
-          <input type='text' onChange={(e) => setEmail(e.target.value)}></input>
+          <div className='check-row'>
+            <input type='checkbox' onClick={toggleEmail}></input>
+            <label>Email</label>
+          </div>
+          <input disabled={!enableEmail} type='text' onChange={(e) => setEmail(e.target.value)}></input>
         </div>
         <div className='input-group'>
-          <label>Phone Number</label>
-          <input type='text' onChange={(e) => setPhoneNumber(e.target.value)}></input>
+          <div className='check-row'>
+            <input type='checkbox' onClick={togglePhone}></input>
+            <label>Phone Number</label>
+          </div>
+          <input disabled={!enablePhone} type='text' onChange={(e) => setPhoneNumber(e.target.value)}></input>
         </div>
       </div>
       <div className='input-row'>

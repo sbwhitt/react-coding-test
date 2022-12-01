@@ -31,7 +31,9 @@ server.get("/api/supervisors", (req, res) => {
 
 server.put("/api/submit", (req, res) => {
   const formData = req.body.formData;
+  // check if first or last name contains a number
   const isNumeric = /\d/.test(formData.firstName) || /\d/.test(formData.lastName);
+  // verifying all required values are populated
   if (!isNumeric && formData.firstName && formData.lastName && formData.supervisor !== "none") {
     console.log(formData);
     res.status(200).send("success");
