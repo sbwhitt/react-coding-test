@@ -11,7 +11,10 @@ function App() {
   const [supervisor, setSupervisor] = useState('none');
 
   const [successMsg, setSuccessMsg] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState({
+    visible: false,
+    errors: []
+  });
 
   const [enableEmail, setEnableEmail] = useState(false);
   const [enablePhone, setEnablePhone] = useState(false);
@@ -30,8 +33,8 @@ function App() {
     const formData = {
       firstName: firstName,
       lastName: lastName,
-      email: email,
-      phoneNumber: phoneNumber,
+      email: enableEmail ? email : null,
+      phoneNumber: enablePhone ? phoneNumber : null,
       supervisor: supervisor
     }
     // sending form data to api
@@ -50,9 +53,9 @@ function App() {
         }
       })
       .catch((err) => {
-        console.log(err.response.data.message);
+        console.log(err.response.data.errors);
         setSuccessMsg(false);
-        setErrorMsg({visible: true, message: err.response.data.message});
+        setErrorMsg({visible: true, errors: err.response.data.errors});
       });
   }
 
@@ -62,6 +65,13 @@ function App() {
       <option value={item.info} name={item.info} key={item.id}>
         {item.info}
       </option>
+    );
+  }
+
+  // rendering list of errors
+  function renderErrors(errors) {
+    return errors.map((item, index) =>
+      <div key={index} className='error-msg'>{item}</div>
     );
   }
 
@@ -80,7 +90,7 @@ function App() {
     <div className='form-container'>
       <h2>Notification Form</h2>
       { successMsg && <p className='success-msg'>Your notification request has been successfully submitted!</p> }
-      { errorMsg.visible && <p className='error-msg'>{errorMsg.message}</p> }
+      { errorMsg.visible && renderErrors(errorMsg.errors) }
       <div className='input-row'>
         <div className='input-group'>
           <label>First Name</label>
