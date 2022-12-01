@@ -7,13 +7,12 @@ function App() {
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [email, setEmail] = useState(null);
-  const [phoneNum, setPhoneNum] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(null);
   const [supervisor, setSupervisor] = useState(null);
 
   useEffect(() => {
     axios.get('/api/supervisors')
       .then((response) => {
-        console.log(response.data);
         setSupervisors(response.data);
       });
   }, []);
@@ -23,16 +22,16 @@ function App() {
       firstName: firstName,
       lastName: lastName,
       email: email,
-      phoneNum: phoneNum,
+      phoneNumber: phoneNumber,
       supervisor: supervisor
     }
-    axios.put('/api/submit', {formData: formData});
+    axios.put('/api/submit', {formData: formData}).catch(err => console.log(err.response.data.message));
   }
 
   function renderOptions(options) {
     return options.map((item, index) =>
-      <option name={item.lastName} key={item.id}>
-        {item.jurisdiction} - {item.lastName}, {item.firstName}
+      <option value={item.info} name={item.info} key={item.id}>
+        {item.info}
       </option>
     );
   }
@@ -57,13 +56,14 @@ function App() {
         </div>
         <div className='input-group'>
           <label>Phone Number</label>
-          <input type='text' onChange={(e) => setPhoneNum(e.target.value)}></input>
+          <input type='text' onChange={(e) => setPhoneNumber(e.target.value)}></input>
         </div>
       </div>
       <div className='input-row'>
         <div className='input-group'>
           <label>Supervisor</label>
           <select onChange={(e) => setSupervisor(e.target.value)}>
+            <option value='none' name='none'>Select...</option>
             {renderOptions(supervisors)}
           </select>
         </div>
