@@ -1,27 +1,13 @@
-# Getting Started with Create React App
+## Running with React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+To run in React development mode first install required packages with: <code>npm i</code>
 
-## Available Scripts
+Then run <code>npm start</code> to run the app alongside the server.
 
-In the project directory, you can run:
-
-### `npm run start`
-
-Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
 ## Running with Docker
 
-With Docker installed, run:
+With Docker installed, run: <code>docker build . -t react-img</code> in react-coding-test/ to build the Docker image.
 
-<code>docker build . -t react-img</code>
-
-in react-coding-test/ to build the Docker image. Then run
-
-<code>docker run -p 3000:3000 react-img</code>
-
-to start the image and run the React app.
+Then run: <code>docker run -p 3000:3000 react-img</code> to start the image and run the React app.
