@@ -89,49 +89,53 @@ function App() {
   return (
     <div className='main-content'>
     <div className='form-container'>
-      <h2>Notification Form</h2>
-      { successMsg && <p className='success-msg'>Your notification request has been successfully submitted!</p> }
-      { errorMsg.visible && renderErrors(errorMsg.errors) }
+      <div className='title'>
+        <h2>Notification Form</h2>
+      </div>
+      <div className='messages'>
+        { successMsg && <p className='success-msg'>Your notification request has been successfully submitted!</p> }
+        { errorMsg.visible && renderErrors(errorMsg.errors) }
+      </div>
       <div className='input-row'>
         <div className='input-group'>
           <label>First Name</label>
-          <input value={firstName} type='text' onChange={(e) => setFirstName(e.target.value)}></input>
+          <input value={firstName} type='text' className='txt-input' onChange={(e) => setFirstName(e.target.value)}></input>
         </div>
         <div className='input-group'>
           <label>Last Name</label>
-          <input value={lastName} type='text' onChange={(e) => setLastName(e.target.value)}></input>
+          <input value={lastName} type='text' className='txt-input' onChange={(e) => setLastName(e.target.value)}></input>
         </div>
       </div>
-      <div className='input-row'>
+      <div>
         How would you like to be notified?
       </div>
       <div className='input-row'>
         <div className='input-group'>
           <div className='check-row'>
-            <input checked={enableEmail} type='checkbox' onChange={toggleEmail}></input>
+            <input checked={enableEmail} type='checkbox' className='check-input' onChange={toggleEmail}></input>
             <label>Email</label>
           </div>
-          <input disabled={!enableEmail} value={email} type='text' onChange={(e) => setEmail(e.target.value)}></input>
+          <input disabled={!enableEmail} value={email} type='text' className='txt-input' onChange={(e) => setEmail(e.target.value)}></input>
         </div>
         <div className='input-group'>
           <div className='check-row'>
-            <input checked={enablePhone} type='checkbox' onChange={togglePhone}></input>
+            <input checked={enablePhone} type='checkbox' className='check-input' onChange={togglePhone}></input>
             <label>Phone Number</label>
           </div>
-          <input disabled={!enablePhone} value={phoneNumber} type='text' onChange={(e) => setPhoneNumber(e.target.value)}></input>
+          <input disabled={!enablePhone} value={phoneNumber} type='text' className='txt-input' onChange={(e) => setPhoneNumber(e.target.value)}></input>
         </div>
       </div>
       <div className='input-row'>
         <div className='input-group'>
           <label>Supervisor</label>
-          <select value={supervisor} onChange={(e) => setSupervisor(e.target.value)}>
+          <select value={supervisor} className='select-input' onChange={(e) => setSupervisor(e.target.value)}>
             <option value='none' name='none'>Select...</option>
             {renderOptions(supervisors)}
           </select>
         </div>
       </div>
       <div className='input-row'>
-        <button onClick={submitForm}>Submit</button>
+        <button className='submit-btn' onClick={submitForm}>Submit</button>
       </div>
     </div>
     </div>

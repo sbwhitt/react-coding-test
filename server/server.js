@@ -38,11 +38,16 @@ server.put('/api/submit', (req, res) => {
   if (!formData.firstName || !formData.lastName) errors.push('Name fields cannot be left blank');
   if (/\d/.test(formData.firstName) || /\d/.test(formData.lastName)) errors.push('Name fields cannot contain numbers');
   if (formData.supervisor === 'none' || !formData.supervisor) errors.push('Supervisor field must have a value');
-  if (formData.email !== null && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email)) errors.push('Valid email address required (example@email.com)');
-  // regex allows whitespace in phone number but removes it before passing it to console
-  if (formData.phoneNumber !== null && !/^([+]?\d{1,2}[-\s]?|)\d{3}[-\s]?\d{3}[-\s]?\d{4}$/.test(formData.phoneNumber)) errors.push('Valid 10 digit phone number without special characters required (111 222 3333))')
-  else formData.phoneNumber = formData.phoneNumber.replace(/\s/g, '');
-  // verifying all required values are populated
+  if (formData.email !== null) {
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email)) errors.push('Valid email address required (example@email.com)');
+  }
+  // verifying phone number
+  if (formData.phoneNumber !== null) {
+    // regex allows whitespace in phone number but removes it before passing it to console
+    if (!/^([+]?\d{1,2}[-\s]?|)\d{3}[-\s]?\d{3}[-\s]?\d{4}$/.test(formData.phoneNumber)) errors.push('Valid 10 digit phone number without special characters required (111 222 3333))');
+    else formData.phoneNumber = formData.phoneNumber.replace(/\s/g, '');
+  }
+  // verifying all required values are populated and valid
   if (errors.length === 0) {
     console.log(formData);
     res.status(200).send('success');
